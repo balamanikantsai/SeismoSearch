@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            overflow: hidden;
+            background-color: black; /* Black space background */
+        }
+        .navbar {
+            display: flex;
+            justify-content: center;
+            background-color: #34495e;
+            padding: 10px;
+            position: relative;
+            z-index: 10;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 14px 20px;
+            margin: 0 10px;
+            background-color: #555;
+            border-radius: 15px; /* Rounded edges for navbar links */
+        }
+        .navbar a:hover {
+            background-color: #777;
+        }
+        .container {
+            text-align: center;
+            position: relative;
+            z-index: 90;
+        }
+        .team-member {
+            margin: 10px 0;
+            font-size: 18px;
+            color: #ddd; /* Brighter color for better visibility */
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+
+<!-- Navigation Bar -->
+<div class="navbar">
+    <a href="/">Home</a>
+    <a href="/about_us">About Us</a>
+    <a href="/contact">Contact</a>
+    <a href="/prediction">Prediction</a>
+</div>
+
+<div class="container">
+    <h1>Contact Us</h1>
+    <p class="about">Feel free to reach out to any of our team members:</p>
+
+    <div class="team-member">Manikanta Guduru: <a href="mailto:personalinn2005@gmail.com" style="color: #ddd;">personalinn2005@gmail.com</a></div>
+    <div class="team-member">Keshav Prabhakar: <a href="mailto:keshavprabhakar449@gmail.com" style="color: #ddd;">keshavprabhakar449@gmail.com</a></div>
+    <div class="team-member">Adyasha Choudhary: <a href="mailto:adyashachoudhury4@gmail.com" style="color: #ddd;">adyashachoudhury4@gmail.com</a></div>
+    <div class="team-member">Team Member 4: <a href="mailto:member4@example.com" style="color: #ddd;">member4@example.com</a></div>
+    <div class="team-member">Team Member 5: <a href="mailto:member5@example.com" style="color: #ddd;">member5@example.com</a></div>
+    <div class="team-member">Team Member 6: <a href="mailto:member6@example.com" style="color: #ddd;">member6@example.com</a></div>
+</div>
+
+<script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    // Resize canvas to fill window
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Generate stars
+    const stars = Array.from({ length: 150 }, () => ({ // Increased number of stars for brighter ambience
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 2,
+        opacity: Math.random() * 0.5 + 0.5,
+        twinkleSpeed: Math.random() * 0.02 + 0.01
+    }));
+
+    function drawStar(star) {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+        ctx.fill();
+    }
+
+    function updateStars() {
+        stars.forEach(star => {
+            star.opacity += star.twinkleSpeed;
+            if (star.opacity > 1 || star.opacity < 0) {
+                star.twinkleSpeed *= -1; // Reverse direction
+            }
+        });
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Update and draw stars
+        updateStars();
+        stars.forEach(drawStar);
+
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+</script>
+
+</body>
+</html>

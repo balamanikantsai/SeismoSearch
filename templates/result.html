@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            overflow: hidden;
+            background-color: black; /* Black space background */
+            color: #ddd; /* Light text color */
+            text-align: center;
+        }
+        header {
+            background-color: #34495e;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+        header button {
+            margin: 0 10px;
+            padding: 10px 15px;
+            color: white;
+            background-color: #555;
+            border: none;
+            cursor: pointer;
+            border-radius: 15px; /* Curved edges for buttons */
+        }
+        header button:hover {
+            background-color: #777;
+        }
+        .container {
+            position: relative;
+            z-index: 10;
+            margin-top: 100px; /* Space from top for intro */
+        }
+        .intro {
+            font-size: 36px; /* Large font size for intro */
+            margin-bottom: 20px;
+        }
+        textarea {
+            width: 80%; /* Width of the text area */
+            height: 200px; /* Height of the text area */
+            margin: 20px auto; /* Centering the text area */
+            padding: 10px;
+            border: 1px solid #93a348;
+            border-radius: 5px;
+            resize: none; /* Disable resizing */
+        }
+        .download-button {
+            padding: 15px 30px;
+            font-size: 20px;
+            background-color: #555;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .download-button:hover {
+            background-color: #777;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+
+<header>
+    <button onclick="window.location.href='/'">Home</button>
+    <button onclick="window.location.href='/about_us'">About Us</button>
+    <button onclick="window.location.href='/contact'">Contact</button>
+    <button onclick="window.location.href='/prediction'">Prediction</button>
+</header>
+
+<div class="container">
+    <h2>Detected Seismic Events</h2>
+    <textarea readonly>{{ csv_data }}</textarea>
+    <br>
+    <a href="/download_csv?csv_data={{ csv_data }}" class="download-button">Download CSV</a>
+    <h3>STA/LTA Plot</h3>
+    <img src="data:image/png;base64,{{ figure }}" alt="STA/LTA Plot">
+</div>
+
+<script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    // Resize canvas to fill window
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Generate stars
+    const stars = Array.from({ length: 150 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 2,
+        opacity: Math.random() * 0.5 + 0.5,
+        twinkleSpeed: Math.random() * 0.02 + 0.01
+    }));
+
+    function drawStar(star) {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+        ctx.fill();
+    }
+
+    function updateStars() {
+        stars.forEach(star => {
+            star.opacity += star.twinkleSpeed;
+            if (star.opacity > 1 || star.opacity < 0) {
+                star.twinkleSpeed *= -1; // Reverse direction
+            }
+        });
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        updateStars();
+        stars.forEach(drawStar);
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+</script>
+
+</body>
+</html>
